@@ -1,8 +1,10 @@
 <template>
-    <div class="flex flex-col md:flex-row">
-        <header class="w-full h-full md:w-16 bg-fuchsia-800">logo</header>
+    <div class="flex flex-col md:flex-row h-screen p-2 m-1 md:m-0 md:bg-white shadow-md rounded-md bg-black">
+        <header class="max-h-screen md:w-16 bg-white">
+            <div class=""><img src="../../assets/images/log.svg" alt="" class="w-20"></div>           
+        </header>
         <div
-            class="mx-auto w-full h-full p-2 shadow-md rounded-md bg-gradient-to-r from-gray-800 to-indigo-900 dark:bg-black text-blue-50"
+            class="md:p-2 md:m-1 flex-grow shadow-md rounded-md bg-gradient-to-r from-gray-800 to-indigo-900 dark:bg-black text-blue-50"
         >
             <div class="heti heti--ancient">
                 <h2>
@@ -24,7 +26,7 @@
                 </p>
             </div>
         </div>
-        <footer class="w-full h-full md:w-16 bg-fuchsia-800">点赞评论</footer>
+        <footer class="md:w-16 bg-fuchsia-800">点赞评论</footer>
     </div>
 </template>
 <script lang="ts">
