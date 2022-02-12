@@ -7,6 +7,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@iconify/json": "^2.0.35",
     "axios": "^0.25.0",
     "nprogress": "^0.2.0",
     "pinia": "^2.0.0-rc.10",
