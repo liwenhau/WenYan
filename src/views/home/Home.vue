@@ -20,9 +20,11 @@
         </header>
         <div class="md:p-2 md:m-10 flex-grow bg-black text-blue-50 shadow-md rounded-md relative ">
             <div class="h-full flex flex-col justify-center">
-                <div class="align-middle md:text-2xl text-xl heti--ancient">
-                    <q>{{ name }}</q>
+                <div class="align-middle md:text-4xl text-3xl">
+                    <q class="heti--ancient">{{ name }}</q>
                 </div>
+                <div class="heti--ancient text-xl mt-6">「{{ source }}」</div>
+                <div class="heti--ancient text-xl mt-6">—— {{ author }} ——</div>
             </div>
         </div>
         <footer class="md:w-16"></footer>
@@ -41,7 +43,9 @@ export default defineComponent({
         const router = useRouter();
         const state = reactive({
             name: '一个人的意义不在于他的成就，而在于他所企求成就的东西。',
-            comments: 20
+            comments: 20,
+            source: "JOJO的奇妙冒险",
+            author: "原创"
         });
         return { ...toRefs(state) };
     },
