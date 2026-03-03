@@ -1,10 +1,13 @@
 <script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
+import { NMessageProvider, NConfigProvider, darkTheme } from 'naive-ui'
 </script>
 
 <template>
-<router-view/>
+  <n-config-provider :theme="darkTheme">
+    <n-message-provider>
+      <router-view/>
+    </n-message-provider>
+  </n-config-provider>
 </template>
 
 <style>
@@ -14,5 +17,8 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 </style>
