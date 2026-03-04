@@ -9,10 +9,12 @@ import {
     NIcon,
     NIconWrapper,
     NBadge,
-    NTag
-    // component
+    NTag,
+    NTooltip,
+    NPopover
+    // coponent
 } from 'naive-ui'
 const naive = create({
-    components: [NCard,NIcon,NIconWrapper,NBadge,NTag]
+    components: [NCard,NIcon,NIconWrapper,NBadge,NTag,NTooltip,NPopover]
 })
 createApp(App).use(router).use(naive).mount('#app')
