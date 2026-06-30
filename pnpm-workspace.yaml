@@ -1,0 +1,13 @@
+packages:
+  - .
+
+allowBuilds:
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+  vue-demi: true
+
+overrides:
+  '@types/lodash': 4.14.178
+  '@types/lodash-es': 4.17.6
+  postcss-js: 4.0.0

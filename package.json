@@ -1,31 +1,73 @@
 {
   "name": "wenyan",
   "version": "0.0.0",
+  "packageManager": "pnpm@11.9.0",
+  "main": "electron/main.cjs",
   "scripts": {
-    "dev": "vite",
+    "dev": "node electron/dev.cjs",
+    "web:dev": "vite",
+    "electron": "electron electron/main.cjs",
+    "desktop:dev": "node electron/dev.cjs",
     "build": "vue-tsc --noEmit && vite build",
+    "desktop:build": "vue-tsc --noEmit && vite build",
+    "desktop:dir": "pnpm run build && electron-builder --win dir --x64",
+    "desktop:pack": "pnpm run build && electron-builder --win portable --x64",
+    "deploy": "pnpm run build && node electron/package-dir.cjs",
     "preview": "vite preview"
   },
+  "build": {
+    "appId": "com.wenyan.desktop",
+    "productName": "WenYan",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "public/favicon.ico",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "electron/win-wallpaper.ps1"
+    ],
+    "win": {
+      "icon": "public/favicon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "WenYan-${version}-${arch}-portable.exe"
+    }
+  },
   "dependencies": {
-    "@vicons/fluent": "^0.12.0",
-    "@vicons/utils": "^0.1.4",
-    "axios": "^0.25.0",
-    "html2canvas": "^1.4.1",
-    "naive-ui": "^2.25.2",
-    "nprogress": "^0.2.0",
-    "pinia": "^2.0.0-rc.10",
-    "qrcode.vue": "^3.8.0",
-    "vue": "^3.2.25",
-    "vue-router": "4"
+    "@vicons/fluent": "0.12.0",
+    "@vicons/utils": "0.1.4",
+    "axios": "0.25.0",
+    "html2canvas": "1.4.1",
+    "naive-ui": "2.25.2",
+    "NeteaseCloudMusicApi": "4.32.0",
+    "nprogress": "0.2.0",
+    "pinia": "2.0.0-rc.10",
+    "qrcode.vue": "3.8.0",
+    "vue": "3.2.28",
+    "vue-router": "4.0.12"
   },
   "devDependencies": {
-    "@types/nprogress": "^0.2.0",
-    "@vitejs/plugin-vue": "^2.0.0",
-    "autoprefixer": "^10.4.2",
-    "postcss": "^8.4.5",
-    "tailwindcss": "^3.0.16",
-    "typescript": "^4.4.4",
-    "vite": "^2.7.2",
-    "vue-tsc": "^0.29.8"
+    "@types/nprogress": "0.2.0",
+    "@vitejs/plugin-vue": "2.0.1",
+    "autoprefixer": "10.4.2",
+    "electron": "31.7.7",
+    "electron-builder": "26.15.3",
+    "postcss": "8.4.5",
+    "tailwindcss": "3.0.16",
+    "typescript": "4.5.5",
+    "vite": "2.7.13",
+    "vue-tsc": "0.29.8"
   }
 }

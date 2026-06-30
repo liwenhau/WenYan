@@ -6,6 +6,7 @@
                  :class="[
                     themeConfig.bgClass,
                     themeConfig.textClass,
+                    themeConfig.cardClass,
                     { 'vertical-rl': isVertical }
                  ]"
                  :style="themeConfig.customStyle">
@@ -27,6 +28,7 @@
                     
                     <div class="mb-8" :class="{ 'absolute top-8 right-8 mb-0': isVertical }">
                          <h1 class="text-2xl font-bold tracking-widest font-serif opacity-90">聞言</h1>
+                         <p class="share-scene-label mt-3 text-xs font-sans tracking-[0.28em] opacity-50">{{ scenePreset.shareLabel }}</p>
                     </div>
 
                     <div class="px-2 flex-grow flex items-center justify-center"
@@ -66,14 +68,14 @@
                                 <QrcodeVue :value="quote.hitokoto" :size="48" level="L" />
                             </div>
                             <div class="flex flex-col gap-2 writing-vertical-rl">
-                                <span>WenYan · Daily Quote</span>
+                                <span>{{ scenePreset.label }} · WenYan</span>
                                 <span>{{ formattedDateCN }}</span>
                             </div>
                          </template>
                          
                          <template v-else>
                             <div class="flex flex-col">
-                                <span>WenYan · Daily Quote</span>
+                                <span>{{ scenePreset.label }} · WenYan</span>
                                 <span>{{ formattedDateEN }}</span>
                             </div>
                             <div class="bg-white p-1 rounded-sm">
@@ -86,6 +88,11 @@
 
             <!-- Customization Controls -->
             <div class="p-4 bg-white dark:bg-[#222] border-t dark:border-white/5 flex flex-col gap-4">
+                <div class="flex items-center justify-center gap-3 text-xs tracking-[0.2em] opacity-60">
+                    <span>{{ scenePreset.label }}</span>
+                    <span>·</span>
+                    <span>{{ scenePreset.line }}</span>
+                </div>
                 <div class="flex justify-center gap-2">
                     <button v-for="theme in themes" :key="theme.name"
                             @click="currentTheme = theme.name"
@@ -129,11 +136,14 @@ import { useMessage } from 'naive-ui';
 import QrcodeVue from 'qrcode.vue';
 import { TextDirectionVertical24Regular, TextDirectionHorizontalLeft24Regular } from '@vicons/fluent';
 import type { Hitokoto } from '../types';
+import type { BackgroundMode } from '../composables/useHomeLogic';
+import { scenePresetMap } from '../constants/scenes';
 
 const props = defineProps<{
   show: boolean;
   quote: Hitokoto;
   isDark: boolean;
+  backgroundMode: BackgroundMode;
 }>();
 
 const emit = defineEmits<{
@@ -162,6 +172,7 @@ const message = useMessage();
 const cardRef = ref<HTMLElement | null>(null);
 const generating = ref(false);
 const currentTheme = ref('default');
+const scenePreset = computed(() => scenePresetMap[props.backgroundMode]);
 
 const themes = [
     { 
@@ -171,6 +182,7 @@ const themes = [
         bgClass: props.isDark ? 'bg-[#1a1a1a]' : 'bg-[#f5f5f5]',
         textClass: props.isDark ? 'text-[#e0e0e0]' : 'text-[#333]',
         borderClass: props.isDark ? 'border-white/10' : 'border-black/10',
+        cardClass: scenePreset.value.cardClass,
         customStyle: {}
     },
     { 
@@ -180,6 +192,7 @@ const themes = [
         bgClass: 'bg-[#fdfbf7]',
         textClass: 'text-[#4a4a4a]',
         borderClass: 'border-[#8c8c8c]/20',
+        cardClass: '',
         customStyle: {}
     },
     { 
@@ -189,6 +202,7 @@ const themes = [
         bgClass: 'bg-black',
         textClass: 'text-white/90',
         borderClass: 'border-white/20',
+        cardClass: '',
         customStyle: {}
     },
     { 
@@ -198,6 +212,7 @@ const themes = [
         bgClass: 'bg-[#1e3a8a]',
         textClass: 'text-white/90',
         borderClass: 'border-white/20',
+        cardClass: '',
         customStyle: {}
     },
     { 
@@ -207,6 +222,7 @@ const themes = [
         bgClass: 'bg-[#7f1d1d]',
         textClass: 'text-[#fecaca]',
         borderClass: 'border-[#fecaca]/20',
+        cardClass: '',
         customStyle: {}
     }
 ];
@@ -218,22 +234,24 @@ const themeConfig = computed(() => {
             ...theme,
             bgClass: props.isDark ? 'bg-[#1a1a1a]' : 'bg-[#f5f5f5]',
             textClass: props.isDark ? 'text-[#e0e0e0]' : 'text-[#333]',
-            borderClass: props.isDark ? 'border-white/10' : 'border-black/10'
+            borderClass: props.isDark ? 'border-white/10' : 'border-black/10',
+            cardClass: scenePreset.value.cardClass
         };
     }
     return theme;
 });
 
 const downloadCard = async () => {
-    if (!cardRef.value || generating.value) return;
+    const cardElement = cardRef.value as HTMLElement | null;
+    if (!cardElement || generating.value) return;
     
     generating.value = true;
     try {
         // Get the computed background color from the element to ensure html2canvas captures it correctly
-        const computedStyle = window.getComputedStyle(cardRef.value);
+        const computedStyle = window.getComputedStyle(cardElement);
         const backgroundColor = computedStyle.backgroundColor;
 
-        const canvas = await html2canvas(cardRef.value, {
+        const canvas = await html2canvas(cardElement, {
             scale: 2, // Retina quality
             useCORS: true,
             backgroundColor: backgroundColor,
@@ -296,5 +314,44 @@ const downloadCard = async () => {
 .writing-vertical-rl {
     writing-mode: vertical-rl;
     text-orientation: mixed;
+}
+
+.share-scene-label {
+    letter-spacing: 0.28em;
+}
+
+.share-card--still {
+    background:
+        radial-gradient(circle at 50% 38%, rgba(184, 149, 88, 0.14), transparent 45%),
+        linear-gradient(145deg, #efe5cf, #ddd6c6 58%, #f3ead8) !important;
+    color: #3a3025;
+}
+
+.share-card--night {
+    background:
+        radial-gradient(circle at 50% 34%, rgba(127, 166, 200, 0.24), transparent 42%),
+        linear-gradient(145deg, #0c1119, #151d2a 55%, #17120f) !important;
+    color: rgba(236, 244, 250, 0.92);
+}
+
+.share-card--rain {
+    background:
+        repeating-linear-gradient(104deg, transparent 0 28px, rgba(220, 235, 231, 0.07) 29px 30px),
+        radial-gradient(circle at 46% 34%, rgba(134, 170, 165, 0.18), transparent 45%),
+        linear-gradient(145deg, #172024, #24302f 58%, #151917) !important;
+    color: rgba(230, 240, 236, 0.92);
+}
+
+.share-card--mountain {
+    background:
+        radial-gradient(ellipse at 50% 82%, rgba(143, 167, 123, 0.22), transparent 48%),
+        linear-gradient(145deg, #182116, #24331f 55%, #141714) !important;
+    color: rgba(234, 239, 225, 0.92);
+}
+
+.share-card--night .share-scene-label,
+.share-card--rain .share-scene-label,
+.share-card--mountain .share-scene-label {
+    color: rgba(255, 255, 255, 0.68);
 }
 </style>
